@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import math
+from regression import predictor
 #read csv and processe
 LifeExp_vs_year = pd.read_csv("LifeExp_vs_Year.csv")
 LifeExp_vs_liver_death = pd.read_csv("LifeExp_vs_liver_death.csv")
@@ -17,7 +18,7 @@ merged_year_avg = pd.read_csv("bmi_year_avg.csv")
 # # set up sidebar
 a = st.sidebar
 a.title("Indicators to Explore")
-choice = a.radio("Navigation", ["LifeExpectancy", "Liver Cancer Death", "Lung Cancer Death", "BMI and Income", "Literacy", "Satisfaction", "%female in The House"])
+choice = a.radio("Navigation", ["LifeExpectancy", "Liver Cancer Death", "Lung Cancer Death", "BMI and Income", "Literacy", "Satisfaction", "%female in The House", "Try our predictor!"])
 # Setting up titles
 st.write("""
 # Global Health Trend of Several Indicators between Male & Female across Continents
@@ -319,6 +320,16 @@ if choice == "BMI and Income":
     fig_year_avg.update_xaxes(tickangle=45)
     st.plotly_chart(fig_year_avg)
 
-
-
+if choice == "Try our predictor!":
+    st.write("""
+    A multiple linear regression using gender, country, and bmi to predict life expectancy
+    """)
+    gender_selection = ["Female", "Male"]
+    country_selection = np.array(LifeExp_vs_year["Country Name"].unique())
+    gender = st.selectbox("Gender: ", gender_selection)
+    country = st.selectbox("Country: ", country_selection)
+    bmi = st.number_input("BMI: ", min_value=0.0, max_value=100.0, value = 23.0, step = 0.1)
+    prediction = predictor(gender, country, bmi)
+    st.write("Life expectancy: {} year(s)".format(round(prediction, 2)))
+    
 
