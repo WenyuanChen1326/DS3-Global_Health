@@ -15,6 +15,7 @@ df_male_country = pd.read_csv("male_country copy.csv")
 
 merged_final_pop = pd.read_csv("bmi_population_income.csv")
 merged_year_avg = pd.read_csv("bmi_year_avg.csv")
+
 # # set up sidebar
 a = st.sidebar
 a.title("Indicators to Explore")
@@ -304,9 +305,23 @@ if choice == "BMI and Income":
     """)
     # the same way as you would draw in jupyter notebook
     df = merged_final_pop
-    fig = px.scatter(df, x="income", y="BMI",
-                     color="gender", symbol='country', size='population',
-                     hover_name='country', size_max=20, animation_frame='year')
+    # fig = px.scatter(df, x="income", y="BMI",
+    #                  color="gender", symbol='country', size='population',
+    #                  hover_name='country', size_max=20)
+    # st.plotly_chart(fig)
+    
+    region_selection = np.array(df.country.unique())
+    Region_bmi = st.selectbox("Country :" , region_selection)
+    for j in region_selection :
+        if j == Region_bmi:
+            df = df[df["country"] == j]
+            break
+    fig = px.scatter(df,x="income", y="BMI",
+                 size="population", color= "gender", symbol = "country",
+                     hover_name="country", size_max=30)
+    fig.update_layout(xaxis_title = "Income (in thousands of dollars)", 
+                      yaxis_title = "BMI")
+
     st.plotly_chart(fig)
 
     st.write("""
@@ -318,6 +333,7 @@ if choice == "BMI and Income":
         "value": "BMI",
     })
     fig_year_avg.update_xaxes(tickangle=45)
+    
     st.plotly_chart(fig_year_avg)
 
 if choice == "Try our predictor!":
@@ -332,4 +348,10 @@ if choice == "Try our predictor!":
     prediction = predictor(gender, country, bmi)
     st.write("Life expectancy: {} year(s)".format(round(prediction, 2)))
     
+# fig_year_avg = px.scatter(merged_year_avg, x="year", y=merged_year_avg.columns[1:], title=
+# "Average BMI per Year", labels={
+#     "value": "BMI",
+# })
+# fig_year_avg.update_xaxes(tickangle=45)
+# fig_year_avg.write_image("fig1.png")
 
