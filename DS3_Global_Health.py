@@ -16,10 +16,13 @@ df_male_country = pd.read_csv("male_country copy.csv")
 merged_final_pop = pd.read_csv("bmi_population_income.csv")
 merged_year_avg = pd.read_csv("bmi_year_avg.csv")
 
+life_vs_lungcancer = pd.read_csv("LifeExpectancy_vs_lungCancerDeath")
+emp_vs_lungcancer = pd.read_csv("lungCancerDeath_vs_employmentRate")
+
 # # set up sidebar
 a = st.sidebar
 a.title("Indicators to Explore")
-choice = a.radio("Navigation", ["LifeExpectancy", "Liver Cancer Death", "Lung Cancer Death", "BMI and Income", "Literacy", "Satisfaction", "%female in The House", "Try our predictor!"])
+choice = a.radio("Navigation", ["LifeExpectancy", "Liver Cancer Death", "Lung Cancer Death", "BMI and Income", "Literacy", "Satisfaction", "%female in The House", "Try our predictor!", "Run AB test!"])
 # Setting up titles
 st.write("""
 # Global Health Trend of Several Indicators between Male & Female across Continents
@@ -179,22 +182,19 @@ if choice == "%female in The House":
     """)
     region_selection = np.append(np.array(Gdp_vs_femaleH.Region.unique()), ["All Regions"])
     Region_female = st.selectbox("Region:" , region_selection)
-    for j in region_selection :
-        if j == Region_female:
-            if j == "All Regions":
-                df = Gdp_vs_femaleH
-            else:
-                df = Gdp_vs_femaleH[Gdp_vs_femaleH['Region'] == j]
-            break
+    if Region_female == "All Regions":
+        df = Gdp_vs_femaleH
+    else:
+        df = Gdp_vs_femaleH[Gdp_vs_femaleH['Region'] == Region_female]
+
 
     fig = px.scatter(df, x="GDPs", y="%female in the house",
                      size="GDPs", color="Country Name",
-                     hover_name="Country Name", size_max=40, animation_frame='Year')
+                     hover_name="Country Name", size_max=40)
     fig.update_layout(yaxis_title="%female in The House",
                       xaxis_range=(np.min(df['GDPs']) * 0.5, np.max(df['GDPs']) * 1.2),
-                      yaxis_range=(np.min(df['%female in the house']) * 0.5, np.max(df['%female in the house']) * 1.2))
+                      yaxis_range=(np.min(df['%female in the house'])-10, np.max(df['%female in the house']) * 1.2))
     st.plotly_chart(fig)
-
 
 if choice == "Literacy":
     example = LiteracyRate_vs_year.groupby(['Year','Indicator Name'])[['Lit','Pop']].mean().reset_index()
@@ -295,9 +295,26 @@ if choice == "Lung Cancer Death":
     st.plotly_chart(df_male_cancer_fig)
 
     # top 10 countries with deaths --> males
-    top_countries_male = df_male_country[:10]
-    fig_top_male_lc = px.bar(top_countries_male, x="country", y="deaths")
-    st.plotly_chart(fig_top_male_lc)
+    # top_countries_male = df_male_country[:10]
+    # fig_top_male_lc = px.bar(top_countries_male, x="country", y="deaths")
+    # st.plotly_chart(fig_top_male_lc)
+    
+    fig = px.scatter(life_vs_lungcancer, x="Year", y="lung_cancer_death_rate",
+                     size="Pop", color="Indicator Name", color_discrete_sequence=['red', 'blue'],
+                     symbol="Indicator Name",
+                     hover_name="Year", log_x=True, size_max=60)
+    st.plotly_chart(fig)
+
+    # lung cancer death vs employment rate
+
+    df = emp_vs_lungcancer
+    fig = px.scatter(df, x="employment", y="Lung Cancer Death",
+                     size="employment", color="gender",
+                     hover_name="gender", size_max=40, animation_frame='Year')
+    fig.update_layout(yaxis_title="Lung Cancer Death",
+                      xaxis_range=(np.min(df['employment']), np.max(df['employment'])),
+                      yaxis_range=(np.min(df['Lung Cancer Death']) * 0.5, np.max(df['Lung Cancer Death']) * 1.2))
+    st.plotly_chart(fig)
 
 if choice == "BMI and Income":
     st.write("""
@@ -348,6 +365,12 @@ if choice == "Try our predictor!":
     prediction = predictor(gender, country, bmi)
     st.write("Life expectancy: {} year(s)".format(round(prediction, 2)))
     
+if choice == "Run AB test!":
+    factor = st.selectbox("Choose One Factor", ["Lung Cancer", "Liver Cancer", "BMI", "Literacy", "Life Expectancy"])
+    image = Image.open(factor + ".png")
+    st.write("P-value is 0, which means the difference between males and females for this factor is statistically significant")
+    st.image(image, caption = "AB test for factor {}".format(factor))
+   
 # fig_year_avg = px.scatter(merged_year_avg, x="year", y=merged_year_avg.columns[1:], title=
 # "Average BMI per Year", labels={
 #     "value": "BMI",
