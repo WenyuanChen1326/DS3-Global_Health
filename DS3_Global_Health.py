@@ -30,6 +30,11 @@ st.write("""
 if choice == "LifeExpectancy":
     example = LifeExp_vs_year.groupby(['Year','Indicator Name'])[['LifeExpectancy','Pop']].mean().reset_index()
 
+    # discussion for life expectency
+    st.write("""
+    ##### Female tends to have higher life expectency than male. With the support from the research papers(linked on the poster), female hormone build the strong immune system, and help them to live longer. 
+    """)
+    
     st.write("""
     ### Example: Overall Average Life Expectancy VS Year between Male and Female
     """)
@@ -90,6 +95,12 @@ if choice == "LifeExpectancy":
     st.plotly_chart(LifeExp_Year_figure)
 
 if choice == "Liver Cancer Death":
+    
+    # discussion for Liver cancer death
+    st.write("""
+    ##### Females tend to have less liver cancer rate than males. Female lives approximately live 5 years longer than male with 0.004% lower liver cancer death rate. Both gender have increased life expectancy and liver cancer rate along the years. 
+    """)
+    
     st.write("""
     ### Explore Life Expectancy VS Average Liver Cancer Death between Genders
     """)
@@ -150,6 +161,12 @@ if choice == "Liver Cancer Death":
 
     st.plotly_chart(fig)
 if choice == "%female in The House":
+    
+    # discussion for female in the house
+    st.write("""
+    ##### Aggregating every country’s data, the percentage of female in the government is increasing by years pass. However, even as of today, on average it’s still less than 30%, which tells us that the political area is still dominated by male. Female voice isn’t represented enough.
+    """)
+    
     st.write("""
     ### Example: Overall Percentage of female in The House VS Year
     """)
@@ -197,6 +214,12 @@ if choice == "%female in The House":
     st.plotly_chart(fig)
 
 if choice == "Literacy":
+    
+    # discussion for literacy
+    st.write("""
+    ##### Males tend to have higher literacy rate than females, even though global literacy rates have generally increased in both genders.
+    """)
+    
     example = LiteracyRate_vs_year.groupby(['Year','Indicator Name'])[['Lit','Pop']].mean().reset_index()
 
     st.write("""
@@ -240,6 +263,11 @@ if choice == "Literacy":
 if choice == "Satisfaction":
     example = SatRate_vs_year.groupby(['Year','Indicator Name'])[['Sat','Pop']].mean().reset_index()
 
+    # discussion for satisfaction
+    st.write("""
+    ##### From the visualization, male and female have same trending. No significant difference detected.
+    """)
+    
     st.write("""
     ### Example: Overall Average Satisfaction Rate by Subregion VS Year between Male and Female
     """)
@@ -280,6 +308,11 @@ if choice == "Satisfaction":
 
 if choice == "Lung Cancer Death":
     example = fm_year_avg.groupby("year").mean().reset_index
+    
+    # discussion for lung cancer death
+    st.write("""
+    ##### Males on average have a much higher average amount of deaths from lung cancer compared to females. Furthermore, progressively over years, the number of deaths for both females and males increases. There is a correlation between lung cancer death rate and employment, that as high as the employment rate is higher, the cancer death rate is higher too due to the stressful life event(supported by the research paper).
+    """)
 
     st.write("""
     ### Example: Overall Average death by year for females and males
@@ -317,6 +350,12 @@ if choice == "Lung Cancer Death":
     st.plotly_chart(fig)
 
 if choice == "BMI and Income":
+    
+    # discussion for BMI and Income
+    st.write("""
+    ##### Males on average have a higher BMI compared to females. Also, the BMI of females and males progressively increased over the years. As easy as people have access to food, the BMI trending is increasing and affecting their health.
+    """)
+    
     st.write("""
     overall trend for BMI per country over years
     """)
