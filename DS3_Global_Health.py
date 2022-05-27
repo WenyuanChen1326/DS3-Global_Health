@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 import math
 from regression import predictor
+from PIL import Image
 #read csv and processe
 LifeExp_vs_year = pd.read_csv("LifeExp_vs_Year.csv")
 LifeExp_vs_liver_death = pd.read_csv("LifeExp_vs_liver_death.csv")
